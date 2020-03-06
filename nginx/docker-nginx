@@ -1,0 +1,18 @@
+#!/usr/bin/env bash
+#
+# Copyright (c) 2019 by lulongij of lu.
+# All rights reserved.
+#
+#ident  "@(#)nginx 1.0"
+
+#安装nginx
+docker pull nginx
+
+# 创建挂载目录
+sudo mkdir -p /app/docker/nginx/{conf,html,logs}
+
+#
+
+
+
+

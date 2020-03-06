@@ -3,7 +3,7 @@
 # Copyright (c) 2019 by lulongij of lu.
 # All rights reserved.
 #
-#ident  "@(#)Connectorlication 1.0"
+#ident  "@(#)spring 1.0"
 
 
 #项目jar名称
