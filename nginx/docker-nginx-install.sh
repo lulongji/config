@@ -22,9 +22,5 @@ WORKING_DIR="$(cd -P "$(dirname "$SOURCE")" && pwd)"
 #整理配置文件
 cp -r  "$(dirname "$WORKING_DIR")"/nginx/config/* /app/docker/nginx/
 
-#运行nginx
-docker run --name nginx -p 80:80 -v /app/docker/nginx/conf/nginx.conf:/etc/nginx/nginx.conf -v /app/docker/nginx/logs:/var/log/nginx -v /app/docker/nginx/conf/www/*.conf:/etc/nginx/conf.d/default.conf -d nginx
-
-
 
 
