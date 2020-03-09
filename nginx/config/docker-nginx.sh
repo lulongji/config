@@ -5,6 +5,9 @@
 #
 #ident  "@(#)nginx 1.0"
 
+#项目名
+APP_NAME="nginx "
+
 #获取当前工作空间
 SOURCE="$0"
 while [ -h "$SOURCE"  ]; do
@@ -26,7 +29,7 @@ start(){
  checkpid
  if [ $? -eq 0 ]; then
 
-    docker run --name nginx --net host -v /app/docker/nginx/conf/nginx.conf:/etc/nginx/nginx.conf -v /app/docker/nginx/logs:/var/log/nginx -v /app/docker/nginx/conf/www:/etc/nginx/conf.d -d nginx
+    docker run --name nginx --net host -v /app/docker/nginx/conf/nginx.conf:/etc/nginx/nginx.conf -v /app/docker/nginx/logs:/var/log/nginx  -d nginx
 
     echo "---------------------------------"
     echo "启动完成"
