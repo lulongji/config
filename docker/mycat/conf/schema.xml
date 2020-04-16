@@ -1,0 +1,85 @@
+<?xml version="1.0"?>
+<!DOCTYPE mycat:schema SYSTEM "schema.dtd">
+<mycat:schema xmlns:mycat="http://io.mycat/">
+
+    <schema name="imdb" checkSQLschema="false" sqlMaxLimit="100">
+        <table name="ytx_im_session" primaryKey="id" autoIncrement="true" dataNode="dn1" rule="mod-long">
+            <childTable name="ytx_im_session_time" autoIncrement="true" primaryKey="id" joinKey="sessionid"
+                        parentKey="session_id"/>
+            <childTable name="ytx_im_session_transfer" primaryKey="id" joinKey="session_id" parentKey="session_id"/>
+            <childTable name="ytx_im_session_three" primaryKey="id" joinKey="session_id" parentKey="session_id"/>
+            <childTable name="im_end_session_comment" primaryKey="id" joinKey="session_id" parentKey="session_id"/>
+            <childTable name="im_satisfied_comment" primaryKey="id" joinKey="session_id" parentKey="session_id"/>
+            <childTable name="ytx_im_message" autoIncrement="true" primaryKey="id" joinKey="session_id"
+                        parentKey="session_id"/>
+        </table>
+        <table name="ccp_application" primaryKey="appId" dataNode="dn1"/>
+        <table name="im_ccp_account" primaryKey="id" dataNode="dn1"/>
+        <table name="im_channelconfig" primaryKey="id" dataNode="dn1"/>
+        <table name="im_config_server" primaryKey="id" dataNode="dn1"/>
+        <table name="im_crm_userinfo" primaryKey="id" type="global" dataNode="dn1"/>
+        <table name="im_end_session_type" primaryKey="id" dataNode="dn1"/>
+        <table name="im_leavingmsg_config" primaryKey="id" dataNode="dn1"/>
+        <table name="im_leavingmsg_field_config" primaryKey="id" dataNode="dn1"/>
+        <table name="im_leavingmsg_user" primaryKey="id" dataNode="dn1"/>
+        <table name="im_quick_frequency" primaryKey="id" dataNode="dn1"/>
+        <table name="im_quick_info" primaryKey="id" dataNode="dn1"/>
+        <table name="im_quick_relation" primaryKey="id" dataNode="dn1"/>
+        <table name="im_quick_type" primaryKey="id" dataNode="dn1"/>
+        <table name="im_quick_upload_error" primaryKey="id" dataNode="dn1"/>
+        <table name="im_robot_config" primaryKey="id" dataNode="dn1"/>
+        <table name="im_satisfied_config" primaryKey="id" dataNode="dn1"/>
+        <table name="im_sensitive_word_config" primaryKey="id" dataNode="dn1"/>
+        <table name="im_userPushRemind_config" primaryKey="id" dataNode="dn1"/>
+        <table name="im_whole_agentconfig" primaryKey="id" dataNode="dn1"/>
+        <table name="sys_cfg_im_app_list" primaryKey="id" dataNode="dn1"/>
+        <table name="wc_base_config" primaryKey="id" dataNode="dn1"/>
+        <table name="wx_base_config" primaryKey="id" dataNode="dn1"/>
+        <table name="wx_menu" primaryKey="id" dataNode="dn1"/>
+        <table name="wx_message_config" primaryKey="id" dataNode="dn1"/>
+        <table name="wx_open_auth_logs" primaryKey="id" dataNode="dn1"/>
+        <table name="wx_open_config" primaryKey="id" dataNode="dn1"/>
+        <table name="wx_platform_info" primaryKey="id" dataNode="dn1"/>
+        <table name="wx_route_uri" primaryKey="id" dataNode="dn1"/>
+        <table name="wx_user_info" primaryKey="openid" dataNode="dn1"/>
+        <table name="ytx_application_attrs" primaryKey="appId" dataNode="dn1"/>
+        <table name="ytx_business_stat_result" primaryKey="ID" dataNode="dn1"/>
+        <table name="ytx_cc_stopmessage_error" primaryKey="id" dataNode="dn1"/>
+        <table name="ytx_copy_message_record" primaryKey="ID" dataNode="dn1"/>
+        <table name="ytx_corporation" primaryKey="ID" dataNode="dn1"/>
+        <table name="ytx_group" primaryKey="ID" dataNode="dn1"/>
+        <table name="ytx_group_members" primaryKey="ID" dataNode="dn1"/>
+        <table name="ytx_im_multipycode" primaryKey="id" dataNode="dn1"/>
+        <table name="ytx_im_recordfile_info" primaryKey="ID" dataNode="dn1"/>
+        <table name="ytx_mgroup" primaryKey="id" dataNode="dn1"/>
+        <table name="ytx_mgroup_modules" primaryKey="id" dataNode="dn1"/>
+        <table name="ytx_module_cluster" primaryKey="ID" dataNode="dn1"/>
+        <table name="ytx_module_init_config" primaryKey="ID" dataNode="dn1"/>
+        <table name="ytx_module_number_refer" primaryKey="module_prefix" dataNode="dn1"/>
+        <table name="ytx_msg_route" primaryKey="ID" dataNode="dn1"/>
+        <table name="ytx_top_contact" primaryKey="id" dataNode="dn1"/>
+        <table name="ytx_user_clear_info" primaryKey="id" dataNode="dn1"/>
+        <table name="ytx_user_device_detail" primaryKey="ID" dataNode="dn1"/>
+        <table name="ytx_user_register" primaryKey="username" dataNode="dn1"/>
+        <table name="ytx_user_unregister" primaryKey="ID" dataNode="dn1"/>
+        <table name="wx_smp_base_config" primaryKey="ID" dataNode="dn1"/>
+        <table name="im_mail_config" primaryKey="ID" dataNode="dn1"/>
+        <table name="im_mail_autograph" primaryKey="ID" dataNode="dn1"/>
+        <table name="im_mail_automatic_reply" primaryKey="ID" dataNode="dn1"/>
+        <table name="im_mail_satisfied" primaryKey="ID" dataNode="dn1"/>
+        <table name="im_mail_template" primaryKey="ID" dataNode="dn1"/>
+        <table name="ytx_im_mail_message" primaryKey="ID" type="global" dataNode="dn1"/>
+        <table name="ytx_im_agent_message" primaryKey="ID" dataNode="dn1"/>
+        <table name="ytx_im_agent_unread_message" primaryKey="ID" dataNode="dn1"/>
+    </schema>
+
+    <dataNode name="dn1" dataHost="localhost1" database="imdb"/>
+
+    <dataHost name="localhost1" maxCon="1000" minCon="10" balance="0"
+              writeType="0" dbType="mysql" dbDriver="native" switchType="1">
+        <heartbeat>select user()</heartbeat>
+        <writeHost host="hostM1" url="poc.imdb.com:3306" user="1" password="1">
+        </writeHost>
+    </dataHost>
+
+</mycat:schema>

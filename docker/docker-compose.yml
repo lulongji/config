@@ -1,0 +1,157 @@
+version: '3'
+
+services:
+
+  nginx:
+    restart: always
+    image: nginx
+    container_name: nginx
+    ports:
+      - 80:80
+      - 443:443
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      - /etc/hosts:/etc/hosts:ro
+      - ./nginx/conf/nginx.conf:/etc/nginx/nginx.conf
+      - ./nginx/conf.d:/etc/nginx/conf.d
+      - ./nginx/logs:/var/log/nginx
+      - ./nginx/html:/usr/share/nginx/html
+      - ./nginx/etc/letsencrypt:/etc/letsencrypt
+    networks:
+      - esnet
+
+  redis:
+    image: redis
+    container_name: redis
+    ports:
+      - 6379:6379
+    restart: always
+    command: redis-server --requirepass 123456 --dir /data
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      - /etc/hosts:/etc/hosts:ro
+      - ./redis/data:/data
+      - ./redis/conf/redis.conf:/etc/redis/redis.conf
+    networks:
+      - esnet
+
+  mysql:
+    restart: always
+    image: mysql:5.7
+    container_name: mysql
+    privileged: true
+    command: --default-authentication-plugin=mysql_native_password #这行代码解决无法访问的问题
+    ports:
+      - 3306:3306
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      - /etc/hosts:/etc/hosts:ro
+      - ./mysql/data:/var/lib/mysql
+      - ./mysql/conf/my.cnf:/etc/mysql/my.cnf
+    networks:
+      - esnet
+
+  mycat:
+    restart: always
+    image: longhronshens/mycat-docker
+    build: ./mycat
+    container_name: mycat
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      - /etc/hosts:/etc/hosts
+      - ./mycat/conf/:/mycat/conf/
+    ports:
+      - 8066:8066 # 暴露mycat服务端口
+      - 9066:9066 # 暴露mycat管理端口
+    networks:
+      - esnet
+
+
+  rabbitmq:
+    restart: always
+    image: rabbitmq
+    container_name: rabbitmq
+    privileged: true
+    ports:
+      - 4369:4369
+      - 5671:5671
+      - 5672:5672
+      - 15672:15672
+      - 25672:25672
+    environment:
+      RABBITMQ_DEFAULT_VHOST: /
+      RABBITMQ_DEFAULT_USER: guest
+      RABBITMQ_DEFAULT_PASS: guest
+      RABBITMQ_LOGS: /var/lib/rabbitmq/rabbitmq.log
+      RABBITMQ_SASL_LOGS: /var/lib/rabbitmq/rabbitmq-sasl.log
+      RABBITMQ_ERLANG_COOKIE: LZJADKXKLULIXFKAALGX
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "200k"
+        max-file: "10"
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      - /etc/hosts:/etc/hosts:ro
+      - ./rabbitmq:/var/lib/rabbitmq
+    networks:
+      - esnet
+
+
+  zookeeper:
+    restart: always
+    image: 'zookeeper:latest'
+    container_name: 'zookeeper01'
+    environment:
+      ZOO_MY_ID: 1
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      - /etc/hosts:/etc/hosts:ro
+      - ./zookeeper/conf/zoo.cfg:/conf/zoo.cfg
+      - ./zookeeper/data:/data
+      - ./zookeeper/logs:/datalog
+    ports:
+      - 4180:2181
+    networks:
+      - esnet
+
+
+  tracker:
+    restart: always
+    image: morunchang/fastdfs
+    container_name: tracker
+    hostname: tracker
+    entrypoint: sh ./tracker.sh
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      - /etc/hosts:/etc/hosts:ro
+      - ./fastdfs/tracker:/var/fdfs
+    networks:
+      - esnet
+
+  storage:
+    restart: always
+    image: morunchang/fastdfs
+    container_name: storage
+    hostname: storage
+    entrypoint: sh ./storage.sh
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      - /etc/hosts:/etc/hosts:ro
+      - ./fastdfs/storage/nginx:/data/nginx/conf
+      - ./fastdfs/storage/data:/data/fastdata
+
+    ports:
+      - 9888:9888
+      - 22122:22122
+    environment:
+      - "TRACKER_SERVER=poc.yuntongxun.com:22122"
+      - "GROUP_NAME=group1"
+    networks:
+      - esnet
+
+networks:
+  esnet:
+    driver: bridge
